@@ -40,7 +40,6 @@ export default class DisplayPage extends PureComponent {
     this.promotions = promotions;
     this.content = content;
     // console.log(this.promotions, 'oro');
-    //
   }
 
   render() {
