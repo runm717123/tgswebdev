@@ -1,5 +1,10 @@
 export const authActions = {
-  doLogin: 'AUTH_DO_LOGIN',
-  doLogout: 'AUTH_DO_LOGOUT',
+  tokenGranted: 'AUTH_DO_LOGIN',
+  logout: 'AUTH_DO_LOGOUT',
   doRegister: 'AUTH_DO_REGISTER',
+};
+
+export const appState = {
+  requesting: 'PAGE_IS_LOADING',
+  forceLoaded: 'PAGE_LOADED',
 };

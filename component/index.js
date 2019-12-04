@@ -14,14 +14,14 @@ const Start = createStackNavigator(
     // Dashboard: ShopDashboard,
     // Login: ShopLogin,
     // Document: DocList,
-    Register: ShopRegister,
     Login: ShopLogin,
+    Register: ShopRegister,
     Stage: Stage,
   },
   {
     headerMode: 'none',
     // initialRouteName: 'ExperimentPage',
-    initialRouteName: 'Stage',
+    initialRouteName: 'Login',
   },
 );
 

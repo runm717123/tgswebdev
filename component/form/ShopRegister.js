@@ -5,7 +5,7 @@ import {
   View,
   TouchableHighlight,
   Text,
-  ScrollView,
+  Alert,
 } from 'react-native';
 import {FormWrapper} from './../misc/Wrappers';
 import {Divider} from './../misc/PlugAndPlay';
@@ -13,16 +13,52 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import {_pull} from './../func/fetcher';
+import {connect} from 'react-redux';
 
-export default class ShopRegister extends Component {
+export class ShopRegister extends Component {
   constructor(props) {
     super(props);
-    // console.log('aw');
+    this.state = {
+      username: '',
+      password: '',
+      cpassword: '',
+      email: '',
+    };
+
+    console.log(this.props, 'propss');
   }
 
   static navigationOptions = {
     header: null,
   };
+
+  async onPressRegister() {
+    for (const key in this.state) {
+      if (this.state[key] === '') {
+        return alert('isi semua ...!');
+      }
+    }
+    if (this.state.password === this.state.cpassword) {
+      try {
+        const greeting = await _pull('user/register', {
+          method: 'post',
+          body: {
+            name: this.state.username,
+            email: this.state.email,
+            password: this.state.password,
+            isOwner: 1,
+          },
+        });
+
+        if (greeting.status === true) {
+          this.props.navigation.navigate('Login');
+        }
+      } catch (error) {
+        alert('Elol :' + error);
+      }
+    }
+  }
 
   render() {
     return (
@@ -32,24 +68,35 @@ export default class ShopRegister extends Component {
         </View>
         <Divider dvWidth={65} stroke={2} />
         <View style={styles.formWrapper}>
-          <TextInput style={styles.txtInput} placeholder="masukkan nama" />
-          <TextInput style={styles.txtInput} placeholder="masukkan emal" />
+          <TextInput
+            style={styles.txtInput}
+            placeholder="masukkan nama"
+            onChangeText={username => this.setState({username})}
+          />
+          <TextInput
+            style={styles.txtInput}
+            placeholder="masukkan email"
+            onChangeText={email => this.setState({email})}
+          />
+
           <TextInput
             style={styles.txtInput}
             secureTextEntry
             placeholder="password"
+            onChangeText={password => this.setState({password})}
           />
           <TextInput
             style={styles.txtInput}
             placeholder="konfirmasi password"
             secureTextEntry
+            onChangeText={cpassword => this.setState({cpassword})}
           />
         </View>
         <View style={styles.buttonset}>
           <Divider dvWidth={80} />
           <TouchableHighlight
             style={styles.button}
-            onPress={() => this.props.navigation.navigate('Login')}>
+            onPress={() => this.onPressRegister()}>
             <Text>Daftar</Text>
           </TouchableHighlight>
           <TouchableHighlight style={styles.button}>
@@ -61,9 +108,16 @@ export default class ShopRegister extends Component {
   }
 }
 
+const mstp = (state /*, ownProps*/) => {
+  return {
+    stt: state,
+  };
+};
+export default connect(mstp)(ShopRegister);
+
 const styles = StyleSheet.create({
   txtInput: {
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: '#BCE0FD',
     borderRadius: 24,
     paddingVertical: 5,

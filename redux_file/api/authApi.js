@@ -1,4 +1,4 @@
-const apiUrl = 'http://nm-api.tifuniwa17.com';
+const apiUrl = 'http://rstall.tifuniwa17.com';
 
 export function fetchingData(payload) {
   console.log(payload, 'fetchdata payload');

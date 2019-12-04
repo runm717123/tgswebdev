@@ -12,23 +12,33 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import {_pull} from './../func/fetcher';
+import {connect} from 'react-redux';
+import {actState} from './../../redux_file/actions/actionCreators';
 
-export default class ShopForm extends Component {
+export class ShopLogin extends Component {
   constructor(props) {
     super(props);
-    // console.log('aw');
+    console.log(props, 'propss');
   }
 
   static navigationOptions = {
     header: null,
   };
 
+  requestingToken() {
+    this.props.app.isLoading
+      ? this.props.requestDone()
+      : this.props.requesting();
+    // this.props.navigation.navigate('Register')
+  }
+
   render() {
     return (
       <FormWrapper>
         <View style={styles.jumbotron}>
-          <TouchableHighlight
-            onPress={() => this.props.navigation.navigate('Register')}>
+          <Text>{this.props.app.isLoading.toString()}</Text>
+          <TouchableHighlight onPress={() => this.requestingToken()}>
             <Text>Sudah mendaftar ?</Text>
           </TouchableHighlight>
         </View>
@@ -55,6 +65,20 @@ export default class ShopForm extends Component {
     );
   }
 }
+const mstp = (state /*, ownProps*/) => {
+  return {
+    app: state.app,
+    // user: state.user,
+    // isLoading: state.app.isLoading,
+  };
+};
+
+const mdtp = {
+  requesting: actState.requesting,
+  requestDone: actState.forceLoaded,
+};
+
+export default connect(mstp, mdtp)(ShopLogin);
 
 const styles = StyleSheet.create({
   jumbotron: {

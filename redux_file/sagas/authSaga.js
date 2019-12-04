@@ -15,16 +15,16 @@ function* loginWorker(action) {
   console.log(action, 'login worker act');
   const response = yield call(fetchingData, action.state);
   console.log(response, 'login worker response');
-  yield put({type: authActions.doLogin, payload: response});
-  if (response.status === false) {
-    alert('something isnt correct');
-  } else {
-    navigatorRef.dispatch(
-      NavigationActions.navigate({
-        routeName: 'Dashboard',
-      }),
-    );
-  }
+  // yield put({type: authActions.tokenGranted, payload: response});
+  // if (response.status === false) {
+  //   alert('something isnt correct');
+  // } else {
+  //   navigatorRef.dispatch(
+  //     NavigationActions.navigate({
+  //       routeName: 'Login',
+  //     }),
+  //   );
+  // }
 }
 
 function* regWorker(action) {
