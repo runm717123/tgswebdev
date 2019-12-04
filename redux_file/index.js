@@ -9,10 +9,10 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 // // import {alertReducer} from 'redux-saga-rn-alert';
 import authReducer from './reducers/authReducer';
 import appReducer from './reducers/appReducer';
-import {helloSaga} from './sagas/helloSaga';
+// import {helloSaga} from './sagas/helloSaga';
 
-// //saga
-// import rootSaga from './sagas/index';
+//saga
+import rootSaga from './sagas/index';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -38,4 +38,4 @@ export const store = createStore(
 // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
 // export const persistor = persistStore(store);
 
-sagaMiddleware.run(helloSaga);
+sagaMiddleware.run(rootSaga);

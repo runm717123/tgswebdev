@@ -1,4 +1,4 @@
-import {authActions, appState} from '../actions/actionTypes';
+import {appState} from '../actions/actionTypes';
 
 const initialState = {
   isLoading: false,

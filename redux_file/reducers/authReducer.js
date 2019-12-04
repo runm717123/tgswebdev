@@ -1,18 +1,25 @@
 import {authActions} from '../actions/actionTypes';
 
 const initialState = {
-  user: {
-    username: '',
-    token: '',
-    shopname: '',
-    isAdmin: true,
-  },
+  username: '',
+  token: '',
+  shopname: '',
+  isAdmin: true,
 };
 
 export default function(state = initialState, action) {
   switch (action.type) {
     case authActions.tokenGranted:
-      return action;
+      console.log(action);
+      return {
+        ...state,
+        username: action.payload.name,
+        token: action.payload.token,
+        shopname:
+          action.payload.shopname === undefined
+            ? 'SECRET SHOP'
+            : action.payload.shopname,
+      };
     case authActions.logout:
       return initialState;
     default:

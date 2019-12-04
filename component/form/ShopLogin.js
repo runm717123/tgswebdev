@@ -14,12 +14,13 @@ import {
 } from 'react-native-responsive-screen';
 import {_pull} from './../func/fetcher';
 import {connect} from 'react-redux';
-import {actState} from './../../redux_file/actions/actionCreators';
+import {actState, actAuth} from './../../redux_file/actions/actionCreators';
 
 export class ShopLogin extends Component {
   constructor(props) {
     super(props);
     console.log(props, 'propss');
+    props.getToken(['joy', '1']);
   }
 
   static navigationOptions = {
@@ -76,6 +77,7 @@ const mstp = (state /*, ownProps*/) => {
 const mdtp = {
   requesting: actState.requesting,
   requestDone: actState.forceLoaded,
+  getToken: actAuth.getToken,
 };
 
 export default connect(mstp, mdtp)(ShopLogin);

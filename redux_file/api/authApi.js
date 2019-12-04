@@ -1,4 +1,21 @@
-const apiUrl = 'http://rstall.tifuniwa17.com';
+const apiUrl = 'http://rstall.tifuniwa17.com/api/';
+
+export async function requestToken(payload) {
+  try {
+    let response = await fetch(apiUrl + 'token/request', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 export function fetchingData(payload) {
   console.log(payload, 'fetchdata payload');
