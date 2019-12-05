@@ -19,8 +19,7 @@ import {actState, actAuth} from './../../redux_file/actions/actionCreators';
 export class ShopLogin extends Component {
   constructor(props) {
     super(props);
-    console.log(props, 'propss');
-    props.getToken(['joy', '1']);
+    // console.log(props, 'propss');s
   }
 
   static navigationOptions = {
@@ -28,9 +27,10 @@ export class ShopLogin extends Component {
   };
 
   requestingToken() {
-    this.props.app.isLoading
-      ? this.props.requestDone()
-      : this.props.requesting();
+    this.props.getToken(['cakot', '1']);
+    // this.props.app.isLoading
+    //   ? this.props.requestDone()
+    //   : this.props.requesting();
     // this.props.navigation.navigate('Register')
   }
 
@@ -55,7 +55,7 @@ export class ShopLogin extends Component {
         <View style={styles.buttonset}>
           <TouchableHighlight
             style={styles.button}
-            onPress={() => this.props.navigation.navigate('Stage')}>
+            onPress={() => this.requestingToken()}>
             <Text>Selanjutnya</Text>
           </TouchableHighlight>
           <TouchableHighlight style={styles.button}>

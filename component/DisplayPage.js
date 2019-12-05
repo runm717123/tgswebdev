@@ -1,7 +1,6 @@
 import React, {PureComponent} from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   FlatList,
   Image,
@@ -9,69 +8,85 @@ import {
   SafeAreaView,
   TouchableHighlight,
 } from 'react-native';
+import {Card, CardItem, Thumbnail, Body, Left, Text} from 'native-base';
 import {StageHeader, Divider} from './misc/PlugAndPlay';
 import {Container} from './misc/Wrappers';
+import {LinkButton} from './misc/Floating';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import {connect} from 'react-redux';
+import {actState, actMarket} from './../redux_file/actions/actionCreators';
 
-export default class DisplayPage extends PureComponent {
+class DisplayPage extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
-
-    const promotions = [];
-    const content = [];
-    for (let i = 1; i <= 7; i++) {
-      promotions.push({
-        id: i,
-        img:
-          'https://gamepedia.cursecdn.com/dota2_gamepedia/4/46/Cosmetic_icon_The_Lightning_Orchid.png',
-        title: 'product ' + i.toString(),
-      });
-      content.push({
-        id: i,
-        img:
-          'http://3.bp.blogspot.com/-RlkqdA_XIis/VCpiCEqLGFI/AAAAAAAAAzI/PxAzEMIkRdU/s1600/crimson_guard_dota_2.png',
-        title: 'product ' + i.toString(),
-      });
-    }
-    this.promotions = promotions;
-    this.content = content;
-    // console.log(this.promotions, 'oro');
   }
+  componentDidMount = () => {
+    this.props.getItems([this.props.auth.token, '']);
+  };
+
+  static navigationOptions = {
+    title: 'Welcome',
+    // headerLeft: null,
+    headerTitleStyle: {textAlign: 'center', flex: 1},
+  };
 
   render() {
     return (
-      <View style={{flex: 1}}>
-        <StageHeader />
+      <ScrollView style={{flex: 1}}>
+        {/* <StageHeader /> */}
         <View style={styles.wrapperPromo}>
-          <FlatList
+          {/* <FlatList
             data={this.promotions}
             renderItem={({item}) => (
               <View style={styles.itemPromo}>
                 <Image source={{uri: item.img}} style={styles.imgPromo} />
-                <Text>{item.title}</Text>
+                <Text>{item.item_name}</Text>
               </View>
             )}
             horizontal
             keyExtractor={i => i.id.toString()}
             contentContainerStyle={styles.contentPromo}
+          /> */}
+          <Image
+            source={{
+              uri:
+                'https://wallup.net/wp-content/uploads/2019/09/07/484478-dota-2-sven-heroes-748x468.jpg',
+            }}
+            style={{width: wp(100), height: hp(40), marginTop: wp(1)}}
           />
           <Divider color="#CFCFCF" dvWidth={90} />
         </View>
         <FlatList
-          data={this.content}
+          data={this.props.market.items}
           numColumns={2}
           contentContainerStyle={styles.contentBody}
           keyExtractor={i => i.id.toString()}
           // columnWrapperStyle={{borderWidth: 0.5}}
           renderItem={({item}) => (
-            <View style={styles.itemPromo}>
-              <Image source={{uri: item.img}} style={styles.imgPromo} />
-              <Text>{item.title}</Text>
-            </View>
+            <Card style={styles.itemPromo}>
+              <CardItem style={{alignItems: 'center'}}>
+                <Left>
+                  <Thumbnail source={require('./img/stall-logo.jpg')} />
+                </Left>
+                <Body>
+                  <Text>{item.item_name}</Text>
+                  <Text note>New</Text>
+                </Body>
+              </CardItem>
+              <CardItem>
+                <Body style={{alignItems: 'center'}}>
+                  <Image
+                    source={{uri: item.item_image}}
+                    style={styles.imgPromo}
+                  />
+                  <Text>{item.description}</Text>
+                  <LinkButton title="Selengkapnya ..." />
+                </Body>
+              </CardItem>
+            </Card>
           )}
         />
         <View style={styles.footer}>
@@ -81,22 +96,40 @@ export default class DisplayPage extends PureComponent {
             <Text>Keluar</Text>
           </TouchableHighlight>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
 
+const mstp = (state /*, ownProps*/) => {
+  return {
+    app: state.app,
+    auth: state.auth,
+    market: state.market,
+  };
+};
+
+const mdtp = {
+  getItems: actMarket.getItems,
+  requesting: actState.requesting,
+  requestDone: actState.forceLoaded,
+};
+
+export default connect(mstp, mdtp)(DisplayPage);
+
 const styles = StyleSheet.create({
   imgPromo: {
-    height: 100,
-    width: 100,
+    // flex: 1,
+    height: 200,
+    width: 200,
+    borderWidth: 2,
+    borderColor: 'blue',
   },
   contentPromo: {
     marginTop: 70,
   },
 
   itemPromo: {
-    // justifyContent: 'center',
     flex: 1,
     alignItems: 'center',
     marginTop: 5,

@@ -1,4 +1,4 @@
-import {authActions, appState} from './actionTypes';
+import {authActions, appState, marketTrans} from './actionTypes';
 
 export const actAuth = {
   tokenGranted: payload => ({
@@ -15,11 +15,21 @@ export const actAuth = {
 };
 
 export const actState = {
-  requesting: payload => ({
+  requesting: () => ({
     type: appState.requesting,
   }),
 
   forceLoaded: () => ({
     type: appState.forceLoaded,
+  }),
+};
+
+export const actMarket = {
+  getItems: payload => ({
+    type: marketTrans.getItems,
+    payload: {
+      token: payload[0],
+      segment: payload[1],
+    },
   }),
 };

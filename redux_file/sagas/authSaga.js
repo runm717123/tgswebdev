@@ -1,5 +1,5 @@
 import {takeEvery, takeLatest, call, put} from 'redux-saga/effects';
-import {authActions} from '../actions/actionTypes';
+import {authActions, appState} from '../actions/actionTypes';
 import {navigatorRef} from './../../App';
 import {NavigationActions} from 'react-navigation';
 // import AsyncStorage from '@react-native-community/async-storage';
@@ -17,14 +17,21 @@ function* loginWorker(action) {
   console.log(response, 'login worker response');
 
   if (response.status === false) {
-    alert('something isnt correct');
+    put({
+      type: appState.requestFailed,
+      payload: {
+        loading: false,
+        message: response.message,
+      },
+    });
+    alert(response.message);
   } else {
     yield put({type: authActions.tokenGranted, payload: response.data});
-    // navigatorRef.dispatch(
-    //   NavigationActions.navigate({
-    //     routeName: 'Register',
-    //   }),
-    // );
+    navigatorRef.dispatch(
+      NavigationActions.navigate({
+        routeName: 'Stage',
+      }),
+    );
   }
 }
 

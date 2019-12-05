@@ -3,7 +3,6 @@ import {authActions} from '../actions/actionTypes';
 const initialState = {
   username: '',
   token: '',
-  shopname: '',
   isAdmin: true,
 };
 
@@ -15,10 +14,6 @@ export default function(state = initialState, action) {
         ...state,
         username: action.payload.name,
         token: action.payload.token,
-        shopname:
-          action.payload.shopname === undefined
-            ? 'SECRET SHOP'
-            : action.payload.shopname,
       };
     case authActions.logout:
       return initialState;

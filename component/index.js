@@ -6,6 +6,7 @@ import {createStackNavigator} from 'react-navigation-stack';
 import ShopLogin from './form/ShopLogin';
 import ShopRegister from './form/ShopRegister';
 import Stage from './DisplayPage';
+import ItemDetail from './ItemDetail';
 // import ShopDashboard from './ShopDashB';
 // import DocList from './DocList';
 
@@ -17,11 +18,12 @@ const Start = createStackNavigator(
     Login: ShopLogin,
     Register: ShopRegister,
     Stage: Stage,
+    Detail: ItemDetail,
   },
   {
-    headerMode: 'none',
+    // headerMode: 'none',
     // initialRouteName: 'ExperimentPage',
-    initialRouteName: 'Login',
+    initialRouteName: 'Detail',
   },
 );
 

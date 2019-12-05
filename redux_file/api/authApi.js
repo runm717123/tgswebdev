@@ -1,4 +1,5 @@
-const apiUrl = 'http://rstall.tifuniwa17.com/api/';
+// const apiUrl = 'http://rstall.tifuniwa17.com/api/';
+const apiUrl = 'http://localhost:8000/api/';
 
 export async function requestToken(payload) {
   try {

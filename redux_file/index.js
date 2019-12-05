@@ -9,6 +9,7 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 // // import {alertReducer} from 'redux-saga-rn-alert';
 import authReducer from './reducers/authReducer';
 import appReducer from './reducers/appReducer';
+import marketReducer from './reducers/marketReducer';
 // import {helloSaga} from './sagas/helloSaga';
 
 //saga
@@ -21,12 +22,11 @@ const sagaMiddleware = createSagaMiddleware();
 //   storage: storage,
 // };
 
-// const storeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION__ || compose;
-
 // combine reducer
 const rootReducer = combineReducers({
   auth: authReducer,
   app: appReducer,
+  market: marketReducer,
 });
 
 // const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -35,7 +35,6 @@ export const store = createStore(
   rootReducer,
   composeWithDevTools(applyMiddleware(sagaMiddleware)),
 );
-// window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
 // export const persistor = persistStore(store);
 
 sagaMiddleware.run(rootSaga);
