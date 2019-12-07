@@ -15,4 +15,5 @@ export const marketTrans = {
   itemServed: 'MARKET_ITEM_SERVED',
   getItems: 'MARKET_GET_ITEM',
   reset: 'MARKET_ITEM_ROLLBACK',
+  fillCart: 'MARKET_FILL_CART',
 };

@@ -9,7 +9,7 @@ function* getItemWorker(action) {
   // console.log(action.payload, 'getItem worker act');
   // return;
   const response = yield call(getItem, action.payload);
-  console.log(response, 'getItem worker response');
+  // console.log(response, 'getItem worker response');
 
   if (response.status === false) {
     put({

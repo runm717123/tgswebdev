@@ -32,4 +32,8 @@ export const actMarket = {
       segment: payload[1],
     },
   }),
+  fillCart: payload => ({
+    type: marketTrans.fillCart,
+    payload: payload,
+  }),
 };

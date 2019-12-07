@@ -7,13 +7,13 @@ import {
   Text,
   Alert,
 } from 'react-native';
-import {FormWrapper} from './../misc/Wrappers';
-import {Divider} from './../misc/PlugAndPlay';
+import {FormWrapper} from '../misc/Wrappers';
+import {Divider} from '../misc/PlugAndPlay';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {_pull} from './../func/fetcher';
+import {_pull} from '../func/fetcher';
 import {connect} from 'react-redux';
 
 export class ShopRegister extends Component {

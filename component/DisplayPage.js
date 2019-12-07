@@ -1,14 +1,16 @@
+/* eslint-disable prettier/prettier */
 import React, {PureComponent} from 'react';
 import {
   View,
   StyleSheet,
   FlatList,
-  Image,
   ScrollView,
   SafeAreaView,
+  ActivityIndicator,
   TouchableHighlight,
 } from 'react-native';
-import {Card, CardItem, Thumbnail, Body, Left, Text} from 'native-base';
+import {Image, Text, Badge, Button} from 'react-native-elements';
+import {Card, CardItem, Thumbnail, Body, Icon} from 'native-base';
 import {StageHeader, Divider} from './misc/PlugAndPlay';
 import {Container} from './misc/Wrappers';
 import {LinkButton} from './misc/Floating';
@@ -25,13 +27,37 @@ class DisplayPage extends PureComponent {
   }
   componentDidMount = () => {
     this.props.getItems([this.props.auth.token, '']);
+    this.navEvent = this.props.navigation.addListener('didFocus', () => {
+      this.props.navigation.setParams({
+        cartValue: this.props.market.cart.length,
+      });
+    });
   };
 
-  static navigationOptions = {
+  componentWillUnmount = () => {
+    this.navEvent.remove();
+  };
+
+  static navigationOptions = ({navigation}) => ({
     title: 'Welcome',
     // headerLeft: null,
     headerTitleStyle: {textAlign: 'center', flex: 1},
-  };
+    headerRight: () => (
+      <View>
+        <Button title="Clear button" type="clear" />
+        <Badge
+          value={navigation.getParam('cartValue', '0')}
+          status="success"
+          containerStyle={{position: 'absolute', top: -4, left: -4}}
+        />
+      </View>
+    ),
+  });
+
+  _seeMore(item) {
+    this.props.navigation.navigate('Detail', item);
+    // console.log(id);
+  }
 
   render() {
     return (
@@ -56,34 +82,42 @@ class DisplayPage extends PureComponent {
                 'https://wallup.net/wp-content/uploads/2019/09/07/484478-dota-2-sven-heroes-748x468.jpg',
             }}
             style={{width: wp(100), height: hp(40), marginTop: wp(1)}}
+            PlaceholderContent={<ActivityIndicator />}
           />
           <Divider color="#CFCFCF" dvWidth={90} />
         </View>
         <FlatList
           data={this.props.market.items}
-          numColumns={2}
-          contentContainerStyle={styles.contentBody}
           keyExtractor={i => i.id.toString()}
-          // columnWrapperStyle={{borderWidth: 0.5}}
           renderItem={({item}) => (
             <Card style={styles.itemPromo}>
-              <CardItem style={{alignItems: 'center'}}>
-                <Left>
-                  <Thumbnail source={require('./img/stall-logo.jpg')} />
-                </Left>
-                <Body>
-                  <Text>{item.item_name}</Text>
+              <CardItem style={{alignSelf: 'flex-start'}}>
+                <Thumbnail
+                  source={require('./img/stall-logo.jpg')}
+                  style={{marginRight: 40}}
+                />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    flex: 1,
+                  }}>
+                  <Text h4>{item.item_name}</Text>
                   <Text note>New</Text>
-                </Body>
+                </View>
               </CardItem>
               <CardItem>
                 <Body style={{alignItems: 'center'}}>
                   <Image
                     source={{uri: item.item_image}}
                     style={styles.imgPromo}
+                    PlaceholderContent={<Text>loading... </Text>}
                   />
                   <Text>{item.description}</Text>
-                  <LinkButton title="Selengkapnya ..." />
+                  <LinkButton
+                    title="Selengkapnya ..."
+                    onPress={() => this._seeMore(item)}
+                  />
                 </Body>
               </CardItem>
             </Card>
@@ -136,15 +170,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginBottom: 10,
   },
-  wrapperPromo: {alignItems: 'center'},
-  contentBody: {
-    // alignItems: 'center',
-    // marginBottom: 100,
-    // flex: 1,
-    // height: hp(150),
-    // flexGrow: 1,
-    // flex: 1,
-  },
+  wrapperPromo: {alignItems: 'center', flexDirection: 'column'},
 
   footer: {
     // flex: 1,

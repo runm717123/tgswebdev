@@ -10,7 +10,7 @@ export const Divider = ({dvColor = 'black', stroke = 1, dvWidth = 100}) => (
     style={{
       width: wp(dvWidth),
       borderBottomWidth: stroke,
-      height: 0,
+      // height: 1,
       color: dvColor,
     }}
   />

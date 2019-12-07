@@ -2,6 +2,8 @@ import {marketTrans} from '../actions/actionTypes';
 
 const initialState = {
   shopname: 'SECRET SHOP',
+  cart: [],
+  tax: 2,
   items: [
     {
       id: 99128,
@@ -19,19 +21,28 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case marketTrans.itemServed:
-      console.log(action, 'itemServed');
       return {
+        ...state,
         shopname: action.payload.shopname,
-        items: action.payload.map(i => ({
-          id: i.id,
-          item_name: i.item_name,
-          description: i.description,
-          price: i.price,
-          vendor: i.vendor,
-          qty: i.qty,
-          item_image: i.item_image,
-        })),
+        items: action.payload,
       };
+    case marketTrans.fillCart:
+      return {
+        ...state,
+        cart: [
+          ...state.cart,
+          state.cart.find(i => i.id === action.payload.id) && action.payload,
+        ],
+      };
+    // if (state.cart.find(i => i.id === action.payload.id)) {
+    //   return state;
+    // } else {
+    //   return {
+    //     ...state,
+    //     cart: [...state.cart, action.payload],
+    //   };
+    // }
+
     case marketTrans.reset:
       return initialState;
     default:
