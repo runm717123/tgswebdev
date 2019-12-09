@@ -12,6 +12,17 @@ export const actAuth = {
       password: payload[1],
     },
   }),
+  register: payload => ({
+    type: authActions.doRegister,
+    payload: {
+      body: {
+        name: payload[0],
+        email: payload[1],
+        password: payload[2],
+        isOwner: payload[3],
+      },
+    },
+  }),
 };
 
 export const actState = {
@@ -35,5 +46,20 @@ export const actMarket = {
   fillCart: payload => ({
     type: marketTrans.fillCart,
     payload: payload,
+  }),
+
+  sendCheckout: payload => ({
+    type: marketTrans.sendCheckout,
+    payload: {
+      token: payload.token,
+      body: {
+        user_id: payload.user_id,
+        amount: payload.amount,
+        items: payload.items.map(i => ({
+          item_id: i.id,
+          qty: i.qty,
+        })),
+      },
+    },
   }),
 };

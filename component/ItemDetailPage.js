@@ -5,10 +5,14 @@ import {
   ActivityIndicator,
   TouchableHighlight,
   Text,
+  Alert,
 } from 'react-native';
 import {Image, Button, Badge, Avatar} from 'react-native-elements';
 import {Divider} from './misc/PlugAndPlay';
-import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from 'react-native-responsive-screen';
 import {connect} from 'react-redux';
 import {actState, actMarket} from '../redux_file/actions/actionCreators';
 import {RFValue} from 'react-native-responsive-fontsize';
@@ -16,11 +20,12 @@ import {RFValue} from 'react-native-responsive-fontsize';
 class DisplayPage extends PureComponent {
   constructor(props) {
     super(props);
+
     this.state = {
       item: props.navigation.state.params,
       count: 1,
     };
-    // console.log(this.state);
+
     this._checkout = this._checkout.bind(this);
     this._fillCart = this._fillCart.bind(this);
   }
@@ -30,7 +35,7 @@ class DisplayPage extends PureComponent {
   };
 
   _checkout() {
-    let items = this.state.item;
+    let items = {...this.state.item};
     items.qty = this.state.count;
     items.price = items.price * items.qty;
     items.price = items.price + (items.price * this.props.market.tax) / 100;
@@ -41,11 +46,17 @@ class DisplayPage extends PureComponent {
     let items = {...this.state.item};
     items.qty = this.state.count;
     items.price = items.price * items.qty;
-    items.price = items.price + (items.price * this.props.market.tax) / 100;
     this.props.fillCarts(items);
+    Alert.alert(
+      'Info',
+      'Item telah di masukkan ke keranjang belanja, cek daftar belanja di tab keranjang',
+      [{text: 'ok', onPress: () => this.props.navigation.goBack()}],
+    );
   }
 
   render() {
+    // console.log(this.state);
+    // console.log(this.state.item[0].item_image);
     return (
       <View style={{flex: 1, justifyContent: 'space-between'}}>
         <View style={styles.card}>
@@ -53,7 +64,11 @@ class DisplayPage extends PureComponent {
             <Text style={{fontWeight: '500'}}>
               The {this.state.item.item_name}
             </Text>
-            <Text style={{}}>{this.state.item.description}</Text>
+            <Text
+              style={{width: widthPercentageToDP(40), lineHeight: 17}}
+              numberOfLines={5}>
+              {this.state.item.description}
+            </Text>
             <View>
               <Text style={{color: 'grey'}}>Only</Text>
               <Text style={{fontWeight: 'bold', fontSize: 20}}>
@@ -121,13 +136,13 @@ class DisplayPage extends PureComponent {
           </View>
         </View>
         <View style={styles.footer}>
-          <Button
+          {/* <Button
             title="Cek"
             txtColor="blue"
             bgColor="white"
             borderRadius={10}
             onPress={() => this._checkout()}
-          />
+          /> */}
           <Button
             title="Tambah ke keranjang"
             borderRadius={10}
@@ -155,8 +170,8 @@ export default connect(mstp, mdtp)(DisplayPage);
 
 const styles = StyleSheet.create({
   imgProduct: {
-    width: 200,
-    height: 200,
+    width: widthPercentageToDP(40),
+    height: 100,
     borderWidth: 2,
     borderColor: 'darkorchid',
   },
@@ -178,14 +193,14 @@ const styles = StyleSheet.create({
   receipt: {
     alignItems: 'center',
     paddingHorizontal: 50,
-    marginTop: -200,
+    marginBottom: 20,
   },
   footer: {
     // position: 'absolute',
     backgroundColor: 'skyblue',
     bottom: 0,
-    // marginTop: 70,
-    height: hp(20),
+    flexDirection: 'row',
+    height: heightPercentageToDP(10),
     alignItems: 'center',
     justifyContent: 'space-evenly',
   },

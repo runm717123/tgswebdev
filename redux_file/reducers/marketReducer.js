@@ -27,22 +27,14 @@ export default function(state = initialState, action) {
         items: action.payload,
       };
     case marketTrans.fillCart:
-      return {
-        ...state,
-        cart: [
-          ...state.cart,
-          state.cart.find(i => i.id === action.payload.id) && action.payload,
-        ],
-      };
-    // if (state.cart.find(i => i.id === action.payload.id)) {
-    //   return state;
-    // } else {
-    //   return {
-    //     ...state,
-    //     cart: [...state.cart, action.payload],
-    //   };
-    // }
-
+      if (state.cart.find(i => i.id === action.payload.id)) {
+        return state;
+      } else {
+        return {
+          ...state,
+          cart: [...state.cart, action.payload],
+        };
+      }
     case marketTrans.reset:
       return initialState;
     default:

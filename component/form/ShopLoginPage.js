@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import {FormWrapper} from '../misc/Wrappers';
+import {Input, Image, Avatar} from 'react-native-elements';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -23,38 +24,48 @@ export class ShopLogin extends Component {
   }
 
   static navigationOptions = {
-    header: null,
+    // header: null,
+    // tabBarVisible: false,
   };
 
   requestingToken() {
-    this.props.getToken(['cakot', '1']);
-    // this.props.app.isLoading
-    //   ? this.props.requestDone()
-    //   : this.props.requesting();
+    this.props.app.isLoading
+      ? this.props.requestDone()
+      : this.props.requesting();
+    this.props.getToken([this.state.name, this.state.password]);
     // this.props.navigation.navigate('Register')
   }
 
   render() {
     return (
       <FormWrapper>
+        <Avatar
+          rounded
+          source={require('./../img/stall-logo.jpg')}
+          style={{width: 80, height: 80, borderRadius: 60}}
+          // containerStyle={{borderRadius: 40}}
+        />
         <View style={styles.jumbotron}>
-          <Text>{this.props.app.isLoading.toString()}</Text>
           <TouchableHighlight onPress={() => this.requestingToken()}>
-            <Text>Sudah mendaftar ?</Text>
+            <Text>SECRET SHOP</Text>
           </TouchableHighlight>
         </View>
-        <Text style={styles.title}>Silahkan masuk</Text>
         <View style={styles.formWrapper}>
-          <TextInput style={styles.txtInput} placeholder="masukkan emal" />
+          <TextInput
+            style={styles.txtInput}
+            placeholder="masukkan nama"
+            onChangeText={name => this.setState({name})}
+          />
           <TextInput
             style={styles.txtInput}
             secureTextEntry
             placeholder="password"
+            onChangeText={password => this.setState({password})}
           />
         </View>
         <View style={styles.buttonset}>
           <TouchableHighlight
-            style={styles.button}
+            style={{...styles.button, backgroundColor: '#2699FB'}}
             onPress={() => this.requestingToken()}>
             <Text>Selanjutnya</Text>
           </TouchableHighlight>
@@ -89,7 +100,7 @@ const styles = StyleSheet.create({
     width: wp(100),
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#2699FB',
+    // backgroundColor: '#2699FB',
   },
   txtInput: {
     borderWidth: 1,

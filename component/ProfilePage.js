@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
   Alert,
 } from 'react-native';
-import {Image, Text, Badge, Overlay} from 'react-native-elements';
+import {Image, Text, Badge, ListItem} from 'react-native-elements';
 import {
   Card,
   CardItem,
@@ -29,26 +29,34 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {connect} from 'react-redux';
-import {actState, actMarket} from './../redux_file/actions/actionCreators';
+import {actState, actMarket} from '../redux_file/actions/actionCreators';
 
-class DisplayPage extends PureComponent {
+class ProfilePage extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       cartVisible: false,
     };
-    console.log(props, 'pr');
+    this.nota = [
+      {
+        title: 'Sub-total',
+        subtitle: '10000',
+      },
+      {
+        title: 'Pajak',
+        subtitle: this.props.market.tax + '%',
+      },
+    ];
   }
 
   static navigationOptions = ({navigation}) => ({
-    headerTitle: 'Halaman utama',
-    tabBarLabel: 'wa',
+    title: 'Welcome',
+    // headerLeft: null,
     headerTitleStyle: {textAlign: 'center', flex: 1},
   });
 
   _seeMore(item) {
     let cart = this.props.market.cart.filter(i => i.id === item.id);
-    // console.log(cart[0], 'cart value');
     if (cart.length === 1) {
       Alert.alert(
         'Peringatan',
@@ -56,7 +64,7 @@ class DisplayPage extends PureComponent {
         [
           {
             text: 'Ya',
-            onPress: () => this.props.navigation.navigate('Detail', cart[0]),
+            onPress: () => this.props.navigation.navigate('Detail', cart),
           },
           {
             text: 'Tidak jadi',
@@ -90,50 +98,47 @@ class DisplayPage extends PureComponent {
   render() {
     return (
       <View>
-        <ScrollView>
-          <Image
-            source={{
-              uri:
-                'https://wallup.net/wp-content/uploads/2019/09/07/484478-dota-2-sven-heroes-748x468.jpg',
-            }}
-            style={{
-              width: wp(100),
-              height: hp(40),
-              marginTop: wp(1),
-              marginBottom: -10,
-            }}
-            PlaceholderContent={<ActivityIndicator />}
+        <ListItem title={'Judul'} />
+        {this.props.market.items.map((l, i) => (
+          <ListItem
+            key={i}
+            leftAvatar={{source: {uri: l.item_image}}}
+            title={l.item_name}
+            subtitle={l.qty + 'x' + l.price}
+            bottomDivider
           />
-          <FlatList
-            data={this.props.market.items}
-            keyExtractor={i => i.id.toString()}
-            renderItem={({item}) => (
-              <Card style={styles.itemPromo}>
-                <CardItem style={{alignSelf: 'center'}}>
-                  <Text h4>{item.item_name}</Text>
-                </CardItem>
-                <CardItem button onPress onPress={() => this._seeMore(item)}>
-                  <Body
-                    style={{
-                      alignItems: 'center',
-                      borderWidth: 1,
-                      margin: 10,
-                      paddingTop: 10,
-                      borderColor: 'blue',
-                    }}>
-                    <Image
-                      source={{uri: item.item_image}}
-                      style={styles.imgPromo}
-                      PlaceholderContent={<Text>loading... </Text>}
-                    />
-                    <Text>{item.description}</Text>
-                    <Text>....</Text>
-                  </Body>
-                </CardItem>
-              </Card>
-            )}
+        ))}
+        <ListItem title={'Nota'} />
+        {this.nota.map((l, i) => (
+          <ListItem
+            key={i}
+            title={l.title}
+            rightSubtitle={l.subtitle}
+            bottomDivider
           />
-        </ScrollView>
+        ))}
+        {/* <FlatList
+          data={this.props.market.items}
+          keyExtractor={i => i.id.toString()}
+          renderItem={({item}) => (
+            <View>
+              <Image
+                source={{uri: item.item_image}}
+                style={{width: 70, height: 70}}
+              />
+              <Text>{item.item_name}</Text>
+              <Text>
+                {item.qty} x {item.price}{' '}
+              </Text>
+              <Text>{item.qty * item.price} </Text>
+            </View>
+            // listitem rn elemens
+            // sub total
+            // tax
+            // total
+            // tombol chekcout
+          )}
+        /> */}
       </View>
     );
   }
@@ -153,7 +158,7 @@ const mdtp = {
   requestDone: actState.forceLoaded,
 };
 
-export default connect(mstp, mdtp)(DisplayPage);
+export default connect(mstp, mdtp)(ProfilePage);
 
 const styles = StyleSheet.create({
   imgPromo: {

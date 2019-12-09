@@ -6,14 +6,14 @@ import {
   FlatList,
   Text,
 } from 'react-native';
-import {Image, Input, Button, CheckBox} from 'react-native-elements';
+import {Image, Input, Button, ButtonGroup} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {StageHeader, Divider} from './misc/PlugAndPlay';
-import Icon from 'react-native-vector-icons/Ionicons';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {actState, actMarket} from './../redux_file/actions/actionCreators';
 
 class Checkout extends PureComponent {
   constructor(props) {
@@ -21,7 +21,7 @@ class Checkout extends PureComponent {
     this.state = {
       username: props.auth.username,
       code: '',
-      payMethod: 1,
+      payMethod: 0,
     };
 
     this.items = this.props.navigation.state.params;
@@ -31,19 +31,32 @@ class Checkout extends PureComponent {
       this.prices += e.price;
     });
     this.prices = Math.round(this.prices);
+    this.payMethodStr = ['Cash', 'Kartu kredit', 'Gunakan saldo'];
   }
 
   static navigationOptions = {
-    title: 'Finish!',
+    title: 'Finish',
   };
+
+  _onCheckout() {
+    this.props.send({
+      token: this.props.auth.token,
+      user_id: this.props.auth.user_id,
+      items: this.items,
+      amount: this.prices,
+    });
+  }
 
   render() {
     return (
       <View>
-        <View style={styles.viewRow}>
-          <Text>jumlah barang : {this.items.length.toString()}</Text>
-          <Text>total harga : {this.prices}</Text>
-        </View>
+        <ButtonGroup
+          onPress={payMethod => this.setState({payMethod})}
+          selectedIndex={this.state.payMethod}
+          buttons={this.payMethodStr}
+          containerStyle={{height: 50}}
+        />
+
         <FlatList
           data={this.items}
           numColumns={4}
@@ -61,23 +74,11 @@ class Checkout extends PureComponent {
         />
         <Divider />
         <View style={styles.viewRow}>
-          <CheckBox
-            title="Cash"
-            checked={this.state.payMethod === 1}
-            onPress={() => this.setState({payMethod: 1})}
-          />
-          <CheckBox
-            title="Kartu kredit"
-            checked={this.state.payMethod === 2}
-            onPress={() => this.setState({payMethod: 2})}
-          />
-          <CheckBox
-            title="Gunakan saldo"
-            checked={this.state.payMethod === 3}
-            onPress={() => this.setState({payMethod: 3})}
-          />
+          <Text>jumlah barang : {this.items.length.toString()}</Text>
+          <Text>total harga : {this.prices}</Text>
+          <Text>perkiraan terkirim : 4 hari</Text>
         </View>
-        {this.state.payMethod === 2 && (
+        {this.state.payMethod === 1 && (
           <View>
             <Input
               placeholder="Nama kamu"
@@ -95,6 +96,7 @@ class Checkout extends PureComponent {
           title="Pesan sekarang"
           type="outline"
           containerStyle={{width: wp(80), alignSelf: 'center'}}
+          onPress={() => this._onCheckout()}
         />
       </View>
     );
@@ -108,7 +110,11 @@ const mstp = (state /*, ownProps*/) => {
   };
 };
 
-export default connect(mstp)(Checkout);
+const mdtp = {
+  send: actMarket.sendCheckout,
+};
+
+export default connect(mstp, mdtp)(Checkout);
 
 const styles = StyleSheet.create({
   item_image: {

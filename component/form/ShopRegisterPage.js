@@ -15,6 +15,7 @@ import {
 } from 'react-native-responsive-screen';
 import {_pull} from '../func/fetcher';
 import {connect} from 'react-redux';
+import {actAuth} from '../../redux_file/actions/actionCreators';
 
 export class ShopRegister extends Component {
   constructor(props) {
@@ -40,23 +41,12 @@ export class ShopRegister extends Component {
       }
     }
     if (this.state.password === this.state.cpassword) {
-      try {
-        const greeting = await _pull('user/register', {
-          method: 'post',
-          body: {
-            name: this.state.username,
-            email: this.state.email,
-            password: this.state.password,
-            isOwner: 1,
-          },
-        });
-
-        if (greeting.status === true) {
-          this.props.navigation.navigate('Login');
-        }
-      } catch (error) {
-        alert('Elol :' + error);
-      }
+      this.props.register([
+        this.state.username,
+        this.state.email,
+        this.state.password,
+        1,
+      ]);
     }
   }
 
@@ -64,7 +54,7 @@ export class ShopRegister extends Component {
     return (
       <FormWrapper>
         <View style={styles.titlebar}>
-          <Text>Buat akun mu!</Text>
+          <Text style={{fontSize: 25}}>Buat akun mu!</Text>
         </View>
         <Divider dvWidth={65} stroke={2} />
         <View style={styles.formWrapper}>
@@ -95,7 +85,7 @@ export class ShopRegister extends Component {
         <View style={styles.buttonset}>
           <Divider dvWidth={80} />
           <TouchableHighlight
-            style={styles.button}
+            style={{...styles.button, backgroundColor: 'lightblue'}}
             onPress={() => this.onPressRegister()}>
             <Text>Daftar</Text>
           </TouchableHighlight>
@@ -108,12 +98,10 @@ export class ShopRegister extends Component {
   }
 }
 
-const mstp = (state /*, ownProps*/) => {
-  return {
-    stt: state,
-  };
+const mdtp = {
+  register: actAuth.register,
 };
-export default connect(mstp)(ShopRegister);
+export default connect(null, mdtp)(ShopRegister);
 
 const styles = StyleSheet.create({
   txtInput: {
